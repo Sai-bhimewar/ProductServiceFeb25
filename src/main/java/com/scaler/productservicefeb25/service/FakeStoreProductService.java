@@ -1,5 +1,6 @@
 package com.scaler.productservicefeb25.service;
 
+import com.scaler.productservicefeb25.dto.FakeStoreCreateProductDto;
 import com.scaler.productservicefeb25.dto.FakeStoreProductDto;
 import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
@@ -28,5 +29,17 @@ public class FakeStoreProductService implements ProductService{
         category.setName(fakeStoreProductDto.getCategory());
         product.setCategory(category);
         return product;
+    }
+
+    @Override
+    public Product createProduct(String name, String description, String  price, String image, String category) {
+        FakeStoreCreateProductDto fakeStoreCreateProductDto = new FakeStoreCreateProductDto();
+        fakeStoreCreateProductDto.setTitle(name);
+        fakeStoreCreateProductDto.setDescription(description);
+        fakeStoreCreateProductDto.setPrice(Double.parseDouble(price));
+        fakeStoreCreateProductDto.setImage(image);
+        fakeStoreCreateProductDto.setCategory(category);
+        FakeStoreProductDto responseDto = restTemplate.postForObject("https://fakestoreapi.com/products/", fakeStoreCreateProductDto, FakeStoreProductDto.class);
+        return responseDto.toProduct();
     }
 }

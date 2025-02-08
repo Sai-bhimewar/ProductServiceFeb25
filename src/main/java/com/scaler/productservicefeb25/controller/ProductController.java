@@ -1,10 +1,9 @@
 package com.scaler.productservicefeb25.controller;
 
+import com.scaler.productservicefeb25.dto.CreateProductRequestDto;
 import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.service.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProductController {
@@ -14,8 +13,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    public void createProduct() {
-
+    @PostMapping("/products")
+    public Product createProduct(@RequestBody CreateProductRequestDto requestDto) {
+        return productService.createProduct(requestDto.getName(),
+                requestDto.getDescription(),
+                requestDto.getPrice(),
+                requestDto.getImage(),
+                requestDto.getCategory());
     }
 
     @GetMapping("/products/{id}")
