@@ -5,6 +5,8 @@ import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
     private ProductService productService;
@@ -26,7 +28,9 @@ public class ProductController {
     public Product getProductDetails(@PathVariable("id") Long id) {
         return productService.getProductDetails(id);
     }
-    public void getAllProductDetails() {
 
+    @GetMapping("/products")
+    public List<Product> getAllProductDetails() {
+        return productService.getAllProducts();
     }
 }
