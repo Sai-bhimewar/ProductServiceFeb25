@@ -1,7 +1,9 @@
 package com.scaler.productservicefeb25.service;
 
 import com.scaler.productservicefeb25.model.Product;
+import org.springframework.http.ResponseEntity;
 
+import java.net.Proxy;
 import java.util.List;
 
 

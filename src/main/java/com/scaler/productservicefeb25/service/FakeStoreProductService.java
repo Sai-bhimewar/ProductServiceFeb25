@@ -1,9 +1,13 @@
 package com.scaler.productservicefeb25.service;
 
+import com.scaler.productservicefeb25.dto.ErrorDto;
 import com.scaler.productservicefeb25.dto.FakeStoreCreateProductDto;
 import com.scaler.productservicefeb25.dto.FakeStoreProductDto;
 import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,17 +25,24 @@ public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product getProductDetails(Long id) {
-        FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class);
-        Product product = new Product();
-        product.setId(fakeStoreProductDto.getId());
-        product.setTitle(fakeStoreProductDto.getTitle());
-        product.setDescription(fakeStoreProductDto.getDescription());
-        product.setPrice(Double.parseDouble(fakeStoreProductDto.getPrice()));
-        product.setImage(fakeStoreProductDto.getImage());
-        Category category = new Category();
-        category.setName(fakeStoreProductDto.getCategory());
-        product.setCategory(category);
-        return product;
+        ResponseEntity<FakeStoreProductDto> fakeStoreProductDto = restTemplate.getForEntity("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class);
+//        Product product = new Product();
+//        product.setId(fakeStoreProductDto.getId());
+//        product.setTitle(fakeStoreProductDto.getTitle());
+//        product.setDescription(fakeStoreProductDto.getDescription());
+//        product.setPrice(Double.parseDouble(fakeStoreProductDto.getPrice()));
+//        product.setImage(fakeStoreProductDto.getImage());
+//        Category category = new Category();
+//        category.setName(fakeStoreProductDto.getCategory());
+//        product.setCategory(category);
+
+//        if(fakeStoreProductDto.getBody()==null) {
+//            ErrorDto errorDto = new ErrorDto();
+//            errorDto.setMessage("Product not found");
+//            return new ResponseEntity<>(errorDto,HttpStatusCode.valueOf(404));
+//        }
+        FakeStoreProductDto responseBody = fakeStoreProductDto.getBody();
+        return responseBody.toProduct();
     }
 
     @Override
