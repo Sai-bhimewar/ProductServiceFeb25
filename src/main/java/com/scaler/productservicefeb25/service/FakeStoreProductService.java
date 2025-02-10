@@ -3,6 +3,7 @@ package com.scaler.productservicefeb25.service;
 import com.scaler.productservicefeb25.dto.ErrorDto;
 import com.scaler.productservicefeb25.dto.FakeStoreCreateProductDto;
 import com.scaler.productservicefeb25.dto.FakeStoreProductDto;
+import com.scaler.productservicefeb25.exception.ProductNotFoundException;
 import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getProductDetails(Long id) {
+    public Product getProductDetails(Long id) throws ProductNotFoundException{
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDto = restTemplate.getForEntity("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class);
 //        Product product = new Product();
 //        product.setId(fakeStoreProductDto.getId());
@@ -42,6 +43,9 @@ public class FakeStoreProductService implements ProductService{
 //            return new ResponseEntity<>(errorDto,HttpStatusCode.valueOf(404));
 //        }
         FakeStoreProductDto responseBody = fakeStoreProductDto.getBody();
+        if(responseBody == null) {
+            throw new ProductNotFoundException();
+        }
         return responseBody.toProduct();
     }
 
