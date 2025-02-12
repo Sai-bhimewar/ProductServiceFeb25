@@ -1,10 +1,10 @@
 package com.scaler.productservicefeb25.service;
 
+import com.scaler.productservicefeb25.dto.FakeStoreCategoryDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
+import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
-import org.springframework.http.ResponseEntity;
 
-import java.net.Proxy;
 import java.util.List;
 
 
@@ -12,4 +12,8 @@ public interface ProductService {
     public Product getProductDetails(Long id) throws ProductNotFoundException;
     public Product createProduct(String name, String description,String price,String image,String category);
     public List<Product> getAllProducts();
+    public List<Product> getLimitedProducts(Long id);
+    public List<Product> getAllProductsOrder(String order);
+    public List<Category> getAllCategories();
+    public List<Product> getProductsByCategory(String category);
 }

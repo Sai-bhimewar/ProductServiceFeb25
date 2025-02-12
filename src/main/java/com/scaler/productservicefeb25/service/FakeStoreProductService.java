@@ -1,6 +1,7 @@
 package com.scaler.productservicefeb25.service;
 
 import com.scaler.productservicefeb25.dto.ErrorDto;
+import com.scaler.productservicefeb25.dto.FakeStoreCategoryDto;
 import com.scaler.productservicefeb25.dto.FakeStoreCreateProductDto;
 import com.scaler.productservicefeb25.dto.FakeStoreProductDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
@@ -66,6 +67,46 @@ public class FakeStoreProductService implements ProductService{
         FakeStoreProductDto[] responseDto=restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreProductDto[].class);
         List<Product> products = new ArrayList<>();
         for(FakeStoreProductDto fakeStoreProductDto:responseDto){
+            products.add(fakeStoreProductDto.toProduct());
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getLimitedProducts(Long id) {
+        FakeStoreProductDto[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products?limit="+id, FakeStoreProductDto[].class);
+        List<Product> products = new ArrayList<>();
+        for(FakeStoreProductDto fakeStoreProductDto:responseArray){
+            products.add(fakeStoreProductDto.toProduct());
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getAllProductsOrder(String order) {
+        FakeStoreProductDto[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products?sort="+order, FakeStoreProductDto[].class);
+        List<Product> products = new ArrayList<>();
+        for(FakeStoreProductDto fakeStoreProductDto:responseArray){
+            products.add(fakeStoreProductDto.toProduct());
+        }
+        return products;
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        FakeStoreCategoryDto[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products/categories", FakeStoreCategoryDto[].class);
+        List<Category> categories = new ArrayList<>();
+        for(FakeStoreCategoryDto fakeStoreCategoryDto:responseArray){
+            categories.add(fakeStoreCategoryDto.toCategory());
+        }
+        return categories;
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+        FakeStoreProductDto[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products/category/"+category, FakeStoreProductDto[].class);
+        List<Product> products = new ArrayList<>();
+        for(FakeStoreProductDto fakeStoreProductDto:responseArray){
             products.add(fakeStoreProductDto.toProduct());
         }
         return products;

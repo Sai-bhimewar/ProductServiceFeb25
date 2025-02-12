@@ -2,7 +2,9 @@ package com.scaler.productservicefeb25.controller;
 
 import com.scaler.productservicefeb25.dto.CreateProductRequestDto;
 import com.scaler.productservicefeb25.dto.ErrorDto;
+import com.scaler.productservicefeb25.dto.FakeStoreCategoryDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
+import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,28 @@ public class ProductController {
     public List<Product> getAllProductDetails() {
         return productService.getAllProducts();
     }
+
+    @GetMapping("/products/limit/{id}")
+    public List<Product> getProductDetailsLimit(@PathVariable("id") Long id)  {
+        return productService.getLimitedProducts(id);
+    }
+
+    @GetMapping("/products/sort/{name}")
+    public List<Product> getProductDetailsDesc(@PathVariable("name") String order) {
+        return productService.getAllProductsOrder(order);
+    }
+
+    @GetMapping("/categories")
+    public List<Category> getCategoryDetails() {
+        return productService.getAllCategories();
+    }
+
+    @GetMapping("/category/{name}")
+    public List<Product> getProductDetailsByCategory(@PathVariable("name") String category) {
+        return productService.getProductsByCategory(category);
+    }
+
+
 
 //    @ExceptionHandler(NullPointerException.class)
 //    public ResponseEntity<ErrorDto> NPEHandler(){
