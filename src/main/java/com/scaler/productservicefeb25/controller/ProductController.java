@@ -4,6 +4,7 @@ import com.scaler.productservicefeb25.dto.CreateProductRequestDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
 import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.service.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("Database") ProductService productService) {
         this.productService = productService;
     }
 
