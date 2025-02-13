@@ -1,12 +1,11 @@
 package com.scaler.productservicefeb25.service;
 
-import com.scaler.productservicefeb25.dto.ErrorDto;
-import com.scaler.productservicefeb25.dto.FakeStoreCategoryDto;
 import com.scaler.productservicefeb25.dto.FakeStoreCreateProductDto;
 import com.scaler.productservicefeb25.dto.FakeStoreProductDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
 import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +50,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product createProduct(String name, String description, String  price, String image, String category) {
+    public Product createProduct(String name, String  price,String description,  String image, String category) {
         FakeStoreCreateProductDto fakeStoreCreateProductDto = new FakeStoreCreateProductDto();
         fakeStoreCreateProductDto.setTitle(name);
         fakeStoreCreateProductDto.setDescription(description);
@@ -93,11 +92,11 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        FakeStoreCategoryDto[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products/categories", FakeStoreCategoryDto[].class);
-        List<Category> categories = new ArrayList<>();
-        for(FakeStoreCategoryDto fakeStoreCategoryDto:responseArray){
-            categories.add(fakeStoreCategoryDto.toCategory());
+    public List<String> getAllCategories() {
+        String[] responseArray=restTemplate.getForObject("https://fakestoreapi.com/products/categories", String[].class);
+        List<String> categories = new ArrayList<>();
+        for(String category:responseArray){
+            categories.add(category);
         }
         return categories;
     }
@@ -110,5 +109,27 @@ public class FakeStoreProductService implements ProductService{
             products.add(fakeStoreProductDto.toProduct());
         }
         return products;
+    }
+
+    @Override
+    public Product updateProductDetails(String name, String description, String  price, String image, String category,Long id) {
+        FakeStoreCreateProductDto fakeStoreCreateProductDto =new FakeStoreCreateProductDto();
+        fakeStoreCreateProductDto.setTitle(name);
+        fakeStoreCreateProductDto.setDescription(description);
+        fakeStoreCreateProductDto.setPrice(Double.parseDouble(price));
+        fakeStoreCreateProductDto.setImage(image);
+        fakeStoreCreateProductDto.setCategory(category);
+        ResponseEntity<FakeStoreCreateProductDto> responseEntity=new ResponseEntity<>(fakeStoreCreateProductDto, HttpStatus.OK);
+        ResponseEntity<FakeStoreProductDto> fakeStoreProductDto=restTemplate.exchange("https://fakestoreapi.com/products/"+id, HttpMethod.PUT,responseEntity, FakeStoreProductDto.class);
+        return fakeStoreProductDto.getBody().toProduct();
+    }
+
+    @Override
+    public Product deleteProductDetails(Long id) throws ProductNotFoundException{
+        ResponseEntity<FakeStoreProductDto> response=restTemplate.exchange("https://fakestoreapi.com/products/"+id, HttpMethod.DELETE, null, FakeStoreProductDto.class);
+        if(response.getBody()==null){
+            throw new ProductNotFoundException();
+        }
+        return response.getBody().toProduct();
     }
 }

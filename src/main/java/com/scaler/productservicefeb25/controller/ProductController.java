@@ -1,13 +1,9 @@
 package com.scaler.productservicefeb25.controller;
 
 import com.scaler.productservicefeb25.dto.CreateProductRequestDto;
-import com.scaler.productservicefeb25.dto.ErrorDto;
-import com.scaler.productservicefeb25.dto.FakeStoreCategoryDto;
 import com.scaler.productservicefeb25.exception.ProductNotFoundException;
-import com.scaler.productservicefeb25.model.Category;
 import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.service.ProductService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +20,8 @@ public class ProductController {
 
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequestDto requestDto) {
-        Product product= productService.createProduct(requestDto.getName(),
+        Product product= productService.createProduct(requestDto.getTitle(),requestDto.getPrice(),
                 requestDto.getDescription(),
-                requestDto.getPrice(),
                 requestDto.getImage(),
                 requestDto.getCategory());
         ResponseEntity<Product> responseEntity = new ResponseEntity<>(product, HttpStatusCode.valueOf(202));
@@ -54,7 +49,7 @@ public class ProductController {
     }
 
     @GetMapping("/categories")
-    public List<Category> getCategoryDetails() {
+    public List<String> getCategoryDetails() {
         return productService.getAllCategories();
     }
 
@@ -63,7 +58,20 @@ public class ProductController {
         return productService.getProductsByCategory(category);
     }
 
+    @PutMapping("/products/{id}")
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody CreateProductRequestDto requestDto) {
+        return productService.updateProductDetails(requestDto.getTitle(),
+                requestDto.getDescription(),
+                requestDto.getPrice(),
+                requestDto.getImage(),
+                requestDto.getCategory(),
+                id);
+    }
 
+    @DeleteMapping("products/{id}")
+    public Product deleteProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        return productService.deleteProductDetails(id);
+    }
 
 //    @ExceptionHandler(NullPointerException.class)
 //    public ResponseEntity<ErrorDto> NPEHandler(){
