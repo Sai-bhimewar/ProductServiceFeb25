@@ -75,7 +75,19 @@ public class DatabaseProductService implements ProductService {
 
     @Override
     public Product updateProductDetails(String name, String description, String price, String image, String category, Long id) {
-        return null;
+        Product product=productRepository.findById(id).get();
+        product.setTitle(name);
+        product.setDescription(description);
+        product.setPrice(Double.parseDouble(price));
+        product.setImage(image);
+        Category categoryFromDB=categoryRepository.findByName(category);
+        if(categoryFromDB==null){
+            Category category1=new Category();
+            category1.setName(category);
+            categoryFromDB=categoryRepository.save(category1);
+        }
+        product.setCategory(categoryFromDB);
+        return productRepository.save(product);
     }
 
     @Override
