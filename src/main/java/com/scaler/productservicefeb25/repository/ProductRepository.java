@@ -2,6 +2,8 @@ package com.scaler.productservicefeb25.repository;
 
 import com.scaler.productservicefeb25.model.Product;
 import com.scaler.productservicefeb25.repository.projection.ProductTitleAndDescription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select title,description from product where id=:id",nativeQuery = true)
     ProductTitleAndDescription getProductDetails3(@Param("id") Long id);
+
+    Page<Product> findByTitleContaining(String query, Pageable pageable);
 }
